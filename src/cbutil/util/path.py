@@ -106,9 +106,39 @@ class Path(_Path):
         else:
             shutil.copyfile(a,b)
 
-    def make_archive(self, dst, format):
+    def make_archive(self, dst, format = None):
+        dst = Path(dst)
+        if format == None:
+            format = dst.detect_format_by_suffix()
+            if format == None:
+                format = 'zip'
+        a = self.absolute().to_str()
+        b = dst.absolute().to_str()
+        shutil.make_archive(b, format, a)
+
+    def unpack_archive_to(self, dst, format = None):
+        if format == None:
+            format = self.detect_format_by_suffix()
         a = self.absolute().to_str()
         b = Path(dst).absolute().to_str()
-        shutil.make_archive(b, format, a)
+        shutil.unpack_archive(a,b,format)
+
+    def detect_format_by_suffix(self):
+        m = {
+            'zip' : 'zip',
+            'tar' : 'tar',
+            'gz' : 'gztar',
+            'bz' : 'bztar',
+            'xz' : 'xztar'
+        }
+        ext = self.ext
+        if ext:
+            format = m.get(ext)
+            if format:
+                return format
+            else:
+                return ext
+        
+
 
 del _Path
