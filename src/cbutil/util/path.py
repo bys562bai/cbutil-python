@@ -98,4 +98,17 @@ class Path(_Path):
     def to_str(self):
         return str(self)
 
+    def copy_to(self, dst):
+        a = self.absolute().to_str()
+        b = Path(dst).absolute().to_str()
+        if self.is_dir():
+            shutil.copytree(a,b)
+        else:
+            shutil.copyfile(a,b)
+
+    def make_archive(self, dst, format):
+        a = self.absolute().to_str()
+        b = Path(dst).absolute().to_str()
+        shutil.make_archive(b, format, a)
+
 del _Path
