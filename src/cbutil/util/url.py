@@ -48,3 +48,5 @@ class URL:
                 print(f'Save as: {save_path}')
                 for data in it:
                     fw.write(data)
+
+__all__ = ['URL']
