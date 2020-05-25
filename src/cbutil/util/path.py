@@ -106,6 +106,11 @@ class Path(_Path):
         else:
             shutil.copyfile(a,b)
 
+    def move_to(self, dst):
+        a = self.absolute().to_str()
+        b = Path(dst).absolute().to_str()
+        shutil.move(a,b)
+
     def make_archive(self, dst, format = None):
         dst = Path(dst)
         if format == None:
