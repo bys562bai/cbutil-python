@@ -155,9 +155,9 @@ class Path(_Path):
         total_compress_size = sum(f.compress_size for f in l)
         print(f'Unzip: {self.absolute().to_str()}')
         print(f'Unzip to: {dst}')
-        print(f'Number of items: {file_num}')
-        print(f'Total size: {total_size}')
-        print(f'Total Compress size: {total_compress_size}')
+        # print(f'Number of items: {file_num}')
+        # print(f'Total size: {total_size}')
+        # print(f'Total Compress size: {total_compress_size}')
         with file_proc_bar(total=total_compress_size) as bar:
             for i,f in enumerate(l):
                 zf.extract(f, dst)
