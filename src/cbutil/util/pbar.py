@@ -1,13 +1,15 @@
 from tqdm import tqdm
+from functools import partial
 
-def proc_file_bar(iterable, chunk_size, total_size):
-    def bar():
-        with tqdm(unit= 'b', unit_scale= True, total=total_size) as pbar:
-            for x in iterable:
-                updated_size = yield x
-                if updated_size:
-                    chunk_size = updated_size
-                pbar.update(chunk_size)
-    return bar()
+class tqdmc(tqdm):
+    def __iter__(self):
+        def it_():
+           yield from iter(super())
+           self.close()
+        return it_() 
+    
 
-__all__ = ['proc_file_bar']
+file_proc_bar = partial(tqdm, unit = 'b', unit_scale = True)
+
+
+__all__ = ['file_proc_bar', 'tqdmc']

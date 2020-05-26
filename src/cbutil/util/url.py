@@ -1,8 +1,17 @@
 import requests
 import contextlib
-from .pbar import proc_file_bar as download_bar
 from .path import Path
 from urllib.parse import urlparse
+from tqdm import tqdm
+from .pbar import file_proc_bar
+
+def download_bar(iterable, chunk_size = None, total_size = None):
+    def bar():
+        with file_proc_bar(total=total_size) as pbar:
+            for x in iterable:
+                yield x
+                pbar.update(chunk_size)
+    return bar()
 
 class URL:
     def __init__(self, url):
