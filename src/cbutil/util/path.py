@@ -146,15 +146,16 @@ class Path(_Path):
             else:
                 return ext
         
-    def zip_to(self, dst):
-        dst = Path(dst).to_str()
+    def unzip(self, dst):
+        dst = Path(dst).absolute().to_str()
         zf = ZipFile(self.to_str())
         l = zf.infolist()
         file_num = len(l)
         total_size = sum(f.file_size for f in l)
         total_compress_size = sum(f.compress_size for f in l)
         print(f'Unzip: {self.absolute().to_str()}')
-        print(f'Number of files: {file_num}')
+        print(f'Unzip to: {dst}')
+        print(f'Number of items: {file_num}')
         print(f'Total size: {total_size}')
         print(f'Total Compress size: {total_compress_size}')
         with file_proc_bar(total=total_compress_size) as bar:
