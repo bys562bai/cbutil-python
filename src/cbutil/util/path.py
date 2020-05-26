@@ -86,9 +86,9 @@ class Path(_Path):
                     encoding = chardet.detect(fr.read(512))['encoding']
         return super().open(mode,buffering, encoding,*args,**kwargs)
     
-    def safe_mkdir(self, mode=0o777):
+    def mkdir(self, *args, do_if_exist =True, parents =True, **kwargs):
         if not self.exists():
-            return super().mkdir(mode, parents = True)
+            return super().mkdir(*args, parents=parents, **kwargs)
 
     def remove(self):
         if self.exists():

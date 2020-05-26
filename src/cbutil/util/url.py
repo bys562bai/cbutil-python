@@ -38,6 +38,7 @@ class URL:
     def download(self, save_path, enable_print = True, enable_bar = True, chunk_size = 16<<10):
         url = self.url
         save_path = Path(save_path)
+        save_path.prnt.mkdir()
         with contextlib.closing(requests.get(url, stream = True)) as r:
             total_size = int(r.headers['Content-Length'] )
             with save_path.open('wb') as fw:
