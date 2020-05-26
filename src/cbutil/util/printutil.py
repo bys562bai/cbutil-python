@@ -1,5 +1,7 @@
 from functools import partial
 
+g_str_len = 0
+
 def compute_length(*args,**kwargs):
     sep = kwargs.get('sep')
     end = kwargs.get('end')
@@ -10,24 +12,27 @@ def compute_length(*args,**kwargs):
     length+=sum(map(len,map(str,args)))
     return length
 
-printn = partial(print, end='')
+printa = partial(print, end='')
 
 def printr(*args, len=0, **kwargs):
-    printn('\r' + ' '*len)
-    printn('\r')
-    printn(*args, **kwargs)
+    printa('\r' + ' '*len)
+    printa('\r')
+    printa(*args, **kwargs)
 
 class InlinePrinter:
     def __init__(self):
         self.is_first = True
         self.cur_len = 0
         
+    def get_print_func(self):
+        return self.print,self.printa,self.printr
+    
     def print(self, *args,**kwargs):
         print(*args,**kwargs)
         self.cur_len = compute_length(*args, **kwargs)
 
-    def printn(self, *args, **kwargs):
-        printn(*args,**kwargs)
+    def printa(self, *args, **kwargs):
+        printa(*args,**kwargs)
         self.cur_len = compute_length(*args, **kwargs)
 
     def printr(self, *args, **kwargs):
@@ -35,5 +40,8 @@ class InlinePrinter:
         self.cur_len = compute_length(*args, **kwargs)
 
 
+ginline_printer = InlinePrinter()
+gprint, gprinta, gprintr = ginline_printer.get_print_func()
 
-__all__ = ['printn', 'printr', 'InlinePrinter']
+
+__all__ = ['printa', 'printr', 'InlinePrinter', 'gprint', 'gprinta', 'gprintr']
