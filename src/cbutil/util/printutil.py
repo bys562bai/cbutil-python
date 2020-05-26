@@ -23,8 +23,8 @@ class InlinePrinter:
         self.cur_len = 0
         
     def print(self, *args,**kwargs):
-        print = [self.printr,self.printn][self.is_first]
         print(*args,**kwargs)
+        self.cur_len = compute_length(*args, **kwargs)
 
     def printn(self, *args, **kwargs):
         printn(*args,**kwargs)
@@ -35,9 +35,5 @@ class InlinePrinter:
         self.cur_len = compute_length(*args, **kwargs)
 
 
-def inline_print():
-    p = InlinePrinter()
-    return p.print
 
-
-__all__ = ['printn', 'printr', 'inline_print', 'InlinePrinter']
+__all__ = ['printn', 'printr', 'InlinePrinter']
