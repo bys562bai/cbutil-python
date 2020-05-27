@@ -28,7 +28,7 @@ class Path(_Path):
     @property
     def ext(self):
         return super().suffix[1:]
-        
+
     @property
     def size(self):
         return self.stat().st_size
@@ -112,9 +112,9 @@ class Path(_Path):
     def remove(self):
         if self.exists():
             if self.is_dir():
-                shutil.rmtree(self.absolute().to_str())
+                shutil.rmtree(self.to_str())
             else:
-                os.remove(self.absolute().to_str())
+                os.remove(self.to_str())
     
     def to_str(self):
         return str(self)

@@ -48,8 +48,20 @@ class URL:
             exist_size = save_path.size
             if exist_size:
                 r.close()
+                if exist_size == total_size:    #has downloaded
+                    if enable_print:
+                        print(f'Downloading: {url}')
+                        print(f'Save as: {save_path}')
+                        if enable_bar:
+                            with file_proc_bar(total=total_size) as pbar:
+                                pbar.update(total_size)
+                    return
+
+                #redo request
                 r = requests.get(url, stream = True, headers = {'Range': f'bytes={exist_size}-'})
                 fw = save_path.open('ab')
+            else:   #none was downloaded
+                fw = save_path.open('wb')
         else:
             save_path.prnt.mkdir()
             fw = save_path.open('wb')
