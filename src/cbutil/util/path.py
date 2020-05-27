@@ -28,7 +28,14 @@ class Path(_Path):
     @property
     def ext(self):
         return super().suffix[1:]
-
+        
+    @property
+    def size(self):
+        return self.stat().st_size
+    
+    @property
+    def rsize(self):
+        return self.stat().st_rsize
 
 #begin iter
 
