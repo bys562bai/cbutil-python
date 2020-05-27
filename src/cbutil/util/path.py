@@ -4,6 +4,7 @@ from .iterutil import is_iterable
 import shutil
 from zipfile import ZipFile
 from .pbar import file_proc_bar
+from .util import get_unique_name
 import os
 # from itertools import chain
 
@@ -45,9 +46,16 @@ class Path(_Path):
     def get_dir_son_iter(self, *filters):
         return self.get_son_iter(Path.is_dir, *filters)
 
+    def get_sibling_iter(self, *filters):
+        return self.prnt.get_son_iter(lambda x: x!=self, *filters)
+
     @property
     def son_iter(self):
         return self.get_son_iter()
+
+    @property
+    def sibling_iter(self, *filters):
+        return self.get_sibling_iter()
 
     @property
     def file_son_iter(self):
@@ -60,6 +68,10 @@ class Path(_Path):
     @property
     def sons(self):
         return list(self.son_iter)
+    
+    @property
+    def siblings(self):
+        return list(self.sibling_iter)
 
     @property
     def file_sons(self):
@@ -101,16 +113,16 @@ class Path(_Path):
         return str(self)
 
     def copy_to(self, dst):
-        a = self.absolute().to_str()
-        b = Path(dst).absolute().to_str()
+        a = self.to_str()
+        b = Path(dst).to_str()
         if self.is_dir():
             shutil.copytree(a,b)
         else:
             shutil.copyfile(a,b)
 
     def move_to(self, dst):
-        a = self.absolute().to_str()
-        b = Path(dst).absolute().to_str()
+        a = self.to_str()
+        b = Path(dst).to_str()
         shutil.move(a,b)
 
     def make_archive(self, dst, format = None):
@@ -163,5 +175,44 @@ class Path(_Path):
                 zf.extract(f, dst)
                 bar.set_description(f'{i}')
                 bar.update(f.compress_size)
+
+    def get_unique_path(self):
+        name = self.name
+        prnt = self.prnt
+        son_names = [x.name for x in prnt.son_iter]
+        name = get_unique_name(name, son_names)
+        return prnt/name
+
+    def make_temp_dir(self):
+        if self.is_file():
+            dir_ = self.prnt
+        else:
+            dir_ = self
+        uqtmp = (dir_/'temp').get_unique_path()
+        uqtmp.mkdir()
+        return uqtmp
+
+    def remove_temp_sons(self):
+        assert(self.is_dir())
+        for son in self.sons:
+            if son.name.startswith('temp'):
+                son.remove()
+
+    def rename_inplace(self, name:str):
+        new_path = self.prnt/name
+        self.rename(new_path)
+
+    def move_all_sons_to(self, dst):
+        for son in self.sons:
+            son.move_to(dst)
+
+    def move_all_out(self):
+        assert(self.is_dir())
+        uq_name = get_unique_name(self.name,[x.name for x in self.son_iter] + [x.name for x in self.siblings])
+        if uq_name!=self.name:
+            self.rename_inplace(uq_name)
+            self = self.prnt/uq_name
+        self.move_all_sons_to(self.prnt)
+        self.remove()
 
 del _Path

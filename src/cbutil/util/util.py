@@ -1,5 +1,6 @@
 import os
 from collections.abc import Iterable
+from random import random
 	
 def cls():
 	os.system('cls')
@@ -86,8 +87,36 @@ def bisect_left(a, x, lo=0, hi=None, key=None):
             hi = mid
     return lo
 
-
 def is_empty(x):
     return len(x) == 0
 
-    
+import heapq
+from more_itertools import first as get_one
+
+def get_min_gap_num(l:list, min_val:int = 1):
+    if not len(l):
+        return min_val
+    heapq.heapify(l)
+    v = heapq.heappop(l)
+    if v>min_val:
+        return min_val
+    while len(l):
+        v+=1
+        u = heapq.heappop(l)
+        if u != v:
+            return v
+    return v+1
+
+def get_unique_name(name:str, src):
+    if name not in src:
+        return name
+    d_nums = []
+    for x in src:
+        if f'{name}_' == f'{x[0:len(name)]}_':
+            try: 
+                d_num = int(x[len(name)+1: ])
+            except ValueError:
+                continue
+            d_nums.append(d_num)
+    uq_num = get_min_gap_num(d_nums,1)
+    return f'{name}_{uq_num}'
