@@ -131,6 +131,14 @@ class Path(_Path):
         else:
             shutil.copyfile(a,b)
 
+    def copy_sons_to(self, dst):
+        dst = Path(dst)
+        assert(self.is_dir() and dst.is_dir())
+        if not dst.exists():
+            dst.mkdir()
+        for son in self.son_iter:
+            son.copy_to(dst/son.name)
+
     def move_to(self, dst):
         a = self.to_str()
         b = Path(dst).to_str()
