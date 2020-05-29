@@ -36,7 +36,7 @@ class URL:
     def name(self):
         return self.path.split('/')[-1]
 
-    def download(self, save_path, continuous = False, enable_print = True, enable_bar = True, chunk_size = 16<<10):
+    def download(self, save_path, continuous = False, enable_print = True, enable_bar = True, chunk_size = 4<<10):
         url = self.url
         save_path = Path(save_path)
         r = requests.get(url, stream = True)
