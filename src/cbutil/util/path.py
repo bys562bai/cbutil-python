@@ -21,6 +21,14 @@ class Path(_Path):
         absPath = Path._Path(*args, **kwargs).resolve()
         return super().__new__(cls, str(absPath), **kwargs)
 
+    @staticmethod
+    def setcwd(path):
+        os.chdir(path)
+    
+    @staticmethod
+    def getcwd():
+        return os.getcwd()
+
     @property
     def prnt(self):
         return Path(super().parent)

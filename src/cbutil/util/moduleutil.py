@@ -1,17 +1,14 @@
 import sys
 import importlib.util as imputil
+import runpy
 
 from .path import Path
 
-def load_module(path, add_to_sys_modules = False):
+def load_module(path):
     path = Path(path)
     cur_sys_path = sys.path.copy()
     sys.path[0] = path.prnt.to_str()
-    spec = imputil.spec_from_file_location(path.stem, path.to_str())
-    m = imputil.module_from_spec(spec)
-    spec.loader.exec_module(m)
-    if add_to_sys_modules:
-        sys.modules[spec.name] = m
+    m = __import__(path.stem)
     sys.path = cur_sys_path
     return m
 
