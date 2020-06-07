@@ -131,9 +131,12 @@ class Path(_Path):
     def to_str(self):
         return str(self)
 
-    def copy_to(self, dst):
+    def copy_to(self, dst, is_prefix = False):
         a = self.to_str()
-        b = Path(dst).to_str()
+        if is_prefix:
+            b = (Path(dst)/(self.name)).to_str()
+        else:
+            b = Path(dst).to_str()
         if self.is_dir():
             shutil.copytree(a,b)
         else:
