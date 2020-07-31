@@ -127,6 +127,11 @@ class Path(_Path):
                 shutil.rmtree(self.to_str())
             else:
                 os.remove(self.to_str())
+
+    def remove_sons(self):
+        assert(self.is_dir())
+        for son in self.son_iter:
+            son.remove()
     
     def to_str(self):
         return str(self)
