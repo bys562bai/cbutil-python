@@ -14,12 +14,12 @@ _Path = type(pathlib.Path(''))
 class Path(_Path):
     _Path = _Path
 
-    def __init__(self, *args, **kwargs):
-        pass
+    # def __init__(self, *args, **kwargs):
+    #     pass
 
-    def __new__(cls, *args, **kwargs):
-        absPath = Path._Path(*args, **kwargs).resolve()
-        return super().__new__(cls, str(absPath), **kwargs)
+    # def __new__(cls, *args, **kwargs):
+    #     absPath = Path._Path(*args, **kwargs).resolve()
+    #     return super().__new__(cls, str(absPath), **kwargs)
 
     @staticmethod
     def setcwd(path):
