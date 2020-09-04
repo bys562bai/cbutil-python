@@ -1,6 +1,5 @@
 import pathlib
 import chardet
-from .iterutil import is_iterable
 import shutil
 from zipfile import ZipFile
 from .pbar import file_proc_bar
@@ -14,12 +13,15 @@ _Path = type(pathlib.Path(''))
 class Path(_Path):
     _Path = _Path
 
-    # def __init__(self, *args, **kwargs):
-    #     pass
+    def __init__(self, *args, **kwargs):
+        pass
 
-    # def __new__(cls, *args, **kwargs):
-    #     absPath = Path._Path(*args, **kwargs).resolve()
-    #     return super().__new__(cls, str(absPath), **kwargs)
+    def __new__(cls, *args, **kwargs):
+        if len(args) == 1 and len(kwargs) == 0:
+            p = args[0]
+            if type(p) == Path:
+                return p
+        return super().__new__(cls, *args, **kwargs)
 
     @staticmethod
     def setcwd(path):
