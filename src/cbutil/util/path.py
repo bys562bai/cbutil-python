@@ -212,11 +212,14 @@ class Path(_Path):
                 bar.update(f.compress_size)
 
     def get_unique_path(self):
-        name = self.name
-        prnt = self.prnt
-        son_names = [x.name for x in prnt.son_iter]
-        name = get_unique_name(name, son_names)
-        return prnt/name
+        '''
+        return a path which is different from its siblings.
+        '''
+        ext = self.ext
+        stem_list = [x.stem for x in self.siblings if x.ext == ext]
+        stem = get_unique_name(self.stem, stem_list)
+        name = f'{stem}.{ext}'
+        return self.prnt/name
 
     def make_temp_dir(self):
         if self.is_file():
